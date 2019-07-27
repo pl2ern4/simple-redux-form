@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/simple-redux-form/static/css/main.582ff947.chunk.css",
+    "main.js": "/simple-redux-form/static/js/main.9e222e26.chunk.js",
+    "main.js.map": "/simple-redux-form/static/js/main.9e222e26.chunk.js.map",
+    "runtime~main.js": "/simple-redux-form/static/js/runtime~main.9f4b60b1.js",
+    "runtime~main.js.map": "/simple-redux-form/static/js/runtime~main.9f4b60b1.js.map",
+    "static/css/2.67e9f284.chunk.css": "/simple-redux-form/static/css/2.67e9f284.chunk.css",
+    "static/js/2.afe6a49d.chunk.js": "/simple-redux-form/static/js/2.afe6a49d.chunk.js",
+    "static/js/2.afe6a49d.chunk.js.map": "/simple-redux-form/static/js/2.afe6a49d.chunk.js.map",
+    "index.html": "/simple-redux-form/index.html",
+    "precache-manifest.51c875816a38e95946e0f9772db8556d.js": "/simple-redux-form/precache-manifest.51c875816a38e95946e0f9772db8556d.js",
+    "service-worker.js": "/simple-redux-form/service-worker.js",
+    "static/css/2.67e9f284.chunk.css.map": "/simple-redux-form/static/css/2.67e9f284.chunk.css.map",
+    "static/css/main.582ff947.chunk.css.map": "/simple-redux-form/static/css/main.582ff947.chunk.css.map",
+    "static/media/react-widgets.css": "/simple-redux-form/static/media/rw-widgets.eceddf47.ttf"
+  }
+}
