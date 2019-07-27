@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Route, Link, BrowserRouter as Router, Switch } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { rootReducer } from './rootReducer';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
@@ -21,10 +21,10 @@ const loggerMiddleware = createLogger();
 const store = createStore(appReducer, applyMiddleware(thunkMiddleware,loggerMiddleware));
 const NotFound = () => <strong>Sorry No Page Found</strong>;
 const Routing = () => (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
         <Switch>
-            <Route exact path={process.env.PUBLIC_URL+"/"} component={App} />
-            <Route exact path={process.env.PUBLIC_URL+"/createnewcustomer"} component={CreateCustomer} />
+            <Route path={"/"} component={App} />
+            <Route path={"/createnewcustomer"} component={CreateCustomer} />
             <Route component={NotFound}/>
         </Switch>  
     </Router>
