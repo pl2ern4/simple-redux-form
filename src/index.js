@@ -32,24 +32,6 @@ const Routing = () => (
 
 const app = <Provider store={store}><Routing/></Provider>
 
-// function App(){
-//     var url = 'https://simpleexpressapi.azurewebsites.net/update';
-// var data = {id:'5d31b40448454a3bfcfb7b53',contactDetail:[{"phone":"233343455","isActive":1}]};
-
-// fetch(url, {
-//   method: 'POST', // or 'PUT'
-//   body: JSON.stringify(data), // data can be `string` or {object}!
-//   headers:{
-//     'Content-Type': 'application/json'
-//   }
-// }).then(res => res.json())
-// .then(response => console.log('Success:', JSON.stringify(response)))
-// .catch(error => console.error('Error:', error));
-
-
-// return <div>hi</div>;
-// }
-
 ReactDOM.render(app, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
