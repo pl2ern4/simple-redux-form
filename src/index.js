@@ -23,7 +23,7 @@ const NotFound = () => <strong>Sorry No Page Found</strong>;
 const Routing = () => (
     <Router>
         <Switch>
-            <Route exact path="/" component={App} />
+            <Route path="/" component={App} />
             <Route exact path="/createnewcustomer" component={CreateCustomer} />
             <Route component={NotFound}/>
         </Switch>  
