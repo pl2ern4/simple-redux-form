@@ -23,8 +23,8 @@ const NotFound = () => <strong>Sorry No Page Found</strong>;
 const Routing = () => (
     <Router>
         <Switch>
-            <Route exact path="/" component={App} />
-            <Route exact path="/createnewcustomer" component={CreateCustomer} />
+            <Route exact path={process.env.PUBLIC_URL+"/"} component={App} />
+            <Route exact path={process.env.PUBLIC_URL+"/createnewcustomer"} component={CreateCustomer} />
             <Route component={NotFound}/>
         </Switch>  
     </Router>
