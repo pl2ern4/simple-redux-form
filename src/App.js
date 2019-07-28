@@ -100,7 +100,7 @@ class App extends Component {
       const {onDelete,addContact} = this;
       const {contactFields} = this.state;
       const statusArray = [{value:0,text:'deactivate'},{value:1,text:'activate'}];
-      let html = contactFields.map((obj,i)=>{   
+      let html = contactFields && contactFields.map((obj,i)=>{   
                 return (
                   <FormSection key={`field_${i}`} name={`section_${i}`}>
                     <tr key={`row_${i}`}>

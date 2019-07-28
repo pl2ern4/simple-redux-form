@@ -3,30 +3,33 @@ import { connect } from 'react-redux';
 import { Field, Form, reduxForm } from 'redux-form';
 import {Redirect} from 'react-router-dom';
 import {createNewUserAction} from './actions';
+import {renderField} from './fieldComponent';
+import {required, maxLength15, minLength2, isString} from './validation';
 
 const CreateCustomer = props => {
-    const redirect = () => {
+    
+    const [toRedirect,setToBeRedirect] = useState(false);
+    if(props.toRedirect || toRedirect){
         return <Redirect to="/"/>
-    }
-    const [value,setValue] = useState(0);
-    if(props.toRedirect){
-        return <Redirect to="/"/>
-    }
+    } 
     return (<Form name='newCustomer' onSubmit={props.handleSubmit(props.createNewCustomer)}>
+                <p className="heading">Create New User</p>
                 <Field
                     name="name"
-                    component="input"
+                    component={renderField}
                     type="text"
                     placeholder="Customer Name"
-                    onChange={e=>setValue(e.target.value)}
-                    value={value}
+                    validate={[required, maxLength15, minLength2, isString]}
                 />
-            <button type="Submit">Create Customer</button>
-            <button type="button" onClick={redirect}>Redirect To Customer Contact Page </button>
+                {props.touched &&((props.error && <span>{props.error}</span>))}
+            <p><button type="Submit">Create Customer</button></p>
+            <p><button type="button" onClick={e=>setToBeRedirect(true)}>Redirect To Customer Contact Page </button></p>
         </Form>)
 }
 
-const NewCustomer = reduxForm({form : 'newCustomer',enableReinitialize: true,})(CreateCustomer);
+const NewCustomer = reduxForm({
+    form : 'newCustomer',
+    enableReinitialize: true,})(CreateCustomer);
 
 const mapStateToProps = state=>({
     toRedirect:state.app.isCreatedUser && state.app.isCreatedUser.ok
