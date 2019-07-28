@@ -21,13 +21,13 @@ const loggerMiddleware = createLogger();
 const store = createStore(appReducer, applyMiddleware(thunkMiddleware,loggerMiddleware));
 const NotFound = () => <strong>Sorry No Page Found</strong>;
 const Routing = () => (
-    <HashRouter>
+    <Router basename={process.env.PUBLIC_URL}>
         <Switch>
             <Route path="/createnewcustomer" component={CreateCustomer} />
             <Route path="/" component={App} />
             <Route component={NotFound}/>
         </Switch>  
-    </HashRouter>
+    </Router>
 )
 
 const app = <Provider store={store}><Routing/></Provider>
