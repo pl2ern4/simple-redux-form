@@ -40,7 +40,7 @@ export function submitForm(payload){
 }
 
 export function getCustomerService(payload={}){
-    return getData(`${url}/get`+(payload.id&&'?id='+payload.id||'')).then(result=>{
+    return getData(`${url}/get`+((payload.id&&'?id='+payload.id)||'')).then(result=>{
         return {[payload.key]:result};
     });
 }
