@@ -80,7 +80,7 @@ export function createNewUserAction (payload){
 export function deleteSelectedUserAction(payload){
     return dispatch=>{
         dispatch(loadFetching());
-        services.deleteSelectedUserService({id:payload,key:'isCustomerDeleted'})
+        services.deleteSelectedUserService({id:payload,key:'customerList'})
         .then(result=>{
             if(result.isCustomerDeleted && result.isCustomerDeleted.ok===0){
                 dispatch(loadError({error:"Couldn't delete user. This might happen if user is already not found or server Error !!"}));

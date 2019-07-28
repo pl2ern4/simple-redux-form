@@ -39,7 +39,25 @@ Note : above command create folder with name "simple-redux-form" and download pr
  This Application is basic demostration of use of react-router, react-hooks and many more.
  
  
- Cheers,
+ Note :
+
+    If you are adding any number to any selected user, It won't be empty submitted.
+    User can be deleted one at a time.
+
+    Selected User's contact number can be added one at a time.
+
+    Selected User's contact number can be deleted one at a time.
+
+    New User Can be created from "Create New User" page which can be available on click of "Create User" button from main page.
+    
+
+    While New User creation application only ask for Name, Which can have alphabets and space.
+    
+    On successfull creation, Application's user will be redirect to main page where he/she can insert any number of contact number. By default it set to decativate.
+
+    Contact Number Can be 8 to 15 bdigit and without special character.
+
+Cheers,
  
        
        

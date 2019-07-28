@@ -11,7 +11,7 @@ import './App.css';
 
 import {getCustomerAction, submitAction, deleteSelectedUserAction, handleErrorClick } from './actions';
 
-import {required, isNumeric, minLength8, isDropDownValid} from './validation';
+import {required, isNumeric, minLength8} from './validation';
 
 import {renderDropdownList, renderField} from './fieldComponent';
 
@@ -25,18 +25,27 @@ class App extends Component {
     return {
       contactFields:[],
       isFieldUpdated:false,
-      customerContact:[]
     }
   }
 
   static getDerivedStateFromProps(props,state){
-    
-    if(props.customerContact[0] && props.customerContact[0]._id){
-      props.change('customerList',props.customerContact[0]._id);
-    }
+
+    const selectedUser = (props.customerContact[0] && props.customerContact[0]._id) || "";
+    props.change('customerList',selectedUser);
     return {
-      contactFields:props.customerContact[0] && props.customerContact[0].contactDetail,
+      isFieldUpdated: (props.customerContact[0] && _.isEqual(props.customerContact[0].contactDetail,state.contactFields) && state.isFieldUpdated),
+      contactFields:(props.customerContact[0] && props.customerContact[0].contactDetail) || [],
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+    if(!_.isEqual(nextState.contactFields,this.state.contactFields) && this.state.contactFields.length){
+        const contactFields = this.state.contactFields.filter((obj,key)=>!obj.phone);
+        this.setState({contactFields},()=>{
+          return true;
+        });
+    }
+    return true;
   }
 
   componentDidMount(){
@@ -46,20 +55,20 @@ class App extends Component {
   componentDidUpdate(prevProps, prevState){
     const initialValues = {};
     const {customerContact} = this.props;
-    // const {contactFields} = this.state;
-    // const isNewPropsEqualToPrevProps = _.isEqual(customerContact,prevProps.customerContact);
-    
-    if(!this.state.isFieldUpdated){
+    const isCustomerContactEmpty = customerContact && customerContact[0] && customerContact[0].contactDetail;
+
+    if(!this.state.isFieldUpdated && isCustomerContactEmpty){
       
-      if(customerContact && customerContact[0] && customerContact[0].contactDetail){
-          customerContact[0].contactDetail.forEach((obj,key)=>{ console.log(obj,key);
+        customerContact[0].contactDetail.forEach((obj,key)=>{
             initialValues[`section_${key}.phone`]=obj.phone;
             initialValues[`section_${key}.isActive`]=obj.isActive;
-          });
+        });
+
+      if(Object.keys(initialValues).length){
+        Object.keys(initialValues).forEach(obj=>this.props.change(obj,initialValues[obj]));
+        this.setState({isFieldUpdated:true});
       }
 
-      Object.keys(initialValues).forEach(obj=>this.props.change(obj,initialValues[obj]));
-      this.setState({isFieldUpdated:true});
     }
   }
 
@@ -76,7 +85,7 @@ class App extends Component {
     delete params.customerList;
     Object.keys(params).forEach(obj=>{
       if(_.isObject(params[obj])){
-        new_array.push({phone:params[obj].phone, isActive:params[obj].isActive.value})
+        new_array.push({phone:params[obj].phone, isActive:params[obj].isActive.value||0})
       }
     });
     props.submitContact({key:'customerContact', contactDetail:new_array,id:props.customerContact[0]._id})
@@ -84,18 +93,19 @@ class App extends Component {
   
   onDelete = (i,customerContact,fn)=>{
       let newContactList = [];
-
+      let removedNumber = "";
       new Promise((resolve,reject)=>{
-        newContactList =customerContact[0].contactDetail && customerContact[0].contactDetail.filter((obj,k)=>i!==k);
-        resolve(newContactList);
+        newContactList =customerContact[0].contactDetail && customerContact[0].contactDetail.filter((obj,k)=>i!==k && obj.phone!=="");
+        removedNumber = customerContact[0].contactDetail && customerContact[0].contactDetail.filter((obj,k)=>i===k);
+        resolve({newContactList,removedNumber});
       })
       .then((result)=>{
-        if(newContactList.length){
-          fn({action:'delete', key:'customerContact', contactDetail:newContactList,id:customerContact[0]._id})
-        }else{
+        if(!removedNumber[0].phone){
           const newContactField = customerContact;
-          newContactField[0].contactDetail=[];
+          newContactField[0].contactDetail=newContactList;
           this.setState({contactFields:newContactField})
+        }else{
+          fn({action:'delete', key:'customerContact', contactDetail:newContactList,id:customerContact[0]._id})
         }
       });
       
@@ -108,7 +118,9 @@ class App extends Component {
   addContact = () =>{
     let updatedContactField= this.state.contactFields||[];
     updatedContactField.push({'phone':'','isActive':0});
-    this.setState({contactFields:updatedContactField,isFieldUpdated:false});
+    new Promise((resolve,reject)=>{
+      this.setState({contactFields:updatedContactField,isFieldUpdated:false},_=>resolve());
+    });
   }
 
   getContactFields = params=>{ 
@@ -138,7 +150,6 @@ class App extends Component {
                           valueField='value'
                           textField='text'
                           defaultValue={obj.isActive}
-                          validate={[isDropDownValid]}
                       />
                       </td>  
                       <td className="table-column"> <button type="button" onClick={e=>onDelete(i,customerContact,submitContact)}>Delete</button> </td>

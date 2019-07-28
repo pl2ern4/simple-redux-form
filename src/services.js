@@ -7,11 +7,9 @@ const postHeader = new Headers({
 postHeader.append('Access-Control-Allow-Origin', url);
 postHeader.append('Access-Control-Allow-Credentials', 'true');
 
-async function getData(url,newHeaders={}, payload={}, method='GET'){
+async function getData(url,newHeaders={'Content-Type': 'application/json'}, payload={}, method='GET'){
     const body = {
-        headers:{
-            'Content-Type': 'application/json'
-        },
+        headers:newHeaders,
         method:method,
         ...(method!=="GET" && {body:JSON.stringify(payload)})
     }
@@ -50,6 +48,6 @@ export function createNewUserService(payload={}){
 }
 
 export function deleteSelectedUserService(payload){
-    return getData(`${url}/delete`,'',payload,'DELETE')
+    return getData(`${url}/delete`,postHeader,payload,'DELETE')
             .then(result=>{ return {[payload.key]:result}});
 }
