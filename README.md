@@ -24,13 +24,14 @@ Mandatory Softwares:
   ii) Using git :
        Open any folder in command prompt/gitbash/ powershell (powershell and command prompt must have git access) 
        and type give command and press "render".
-       git clone https://github.com/pl2ern4/simple-redux-form.git
+       
+      git clone https://github.com/pl2ern4/simple-redux-form.git
        
 Note : above command create folder with name "simple-redux-form" and download project file in that folder.      
 
  2) Enter in folder name "simple-redux-form" in console. 
   
- 3) Enter "npm install && npm start" and press enter. (for installation of dependencies and start the module)
+ 3) Enter  "npm install && npm start"  and press enter. (for installation of dependencies and start the module)
  
  After above application will open in default browser itself Or if default browser is not set, 
  It will ask you for the permission to open in any browser.
