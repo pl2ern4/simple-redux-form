@@ -86,7 +86,7 @@ class App extends Component {
   }
 
   createUser = ()=>{
-    this.props.history.push(`/createnewcustomer`);
+    window.location.href = `/createnewcustomer`;
   }
 
   addContact = () =>{
