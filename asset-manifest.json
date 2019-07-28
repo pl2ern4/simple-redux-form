@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/simple-redux-form/static/css/main.582ff947.chunk.css",
-    "main.js": "/simple-redux-form/static/js/main.62047f53.chunk.js",
-    "main.js.map": "/simple-redux-form/static/js/main.62047f53.chunk.js.map",
+    "main.css": "/simple-redux-form/static/css/main.1a64f2d4.chunk.css",
+    "main.js": "/simple-redux-form/static/js/main.a0bb1675.chunk.js",
+    "main.js.map": "/simple-redux-form/static/js/main.a0bb1675.chunk.js.map",
     "runtime~main.js": "/simple-redux-form/static/js/runtime~main.9f4b60b1.js",
     "runtime~main.js.map": "/simple-redux-form/static/js/runtime~main.9f4b60b1.js.map",
     "static/css/2.67e9f284.chunk.css": "/simple-redux-form/static/css/2.67e9f284.chunk.css",
-    "static/js/2.afe6a49d.chunk.js": "/simple-redux-form/static/js/2.afe6a49d.chunk.js",
-    "static/js/2.afe6a49d.chunk.js.map": "/simple-redux-form/static/js/2.afe6a49d.chunk.js.map",
+    "static/js/2.fcfd9fbc.chunk.js": "/simple-redux-form/static/js/2.fcfd9fbc.chunk.js",
+    "static/js/2.fcfd9fbc.chunk.js.map": "/simple-redux-form/static/js/2.fcfd9fbc.chunk.js.map",
     "index.html": "/simple-redux-form/index.html",
-    "precache-manifest.0ac48623f7475bcbfc992bf8a3a69096.js": "/simple-redux-form/precache-manifest.0ac48623f7475bcbfc992bf8a3a69096.js",
+    "precache-manifest.372743afb83e7671558ae467a650bc9f.js": "/simple-redux-form/precache-manifest.372743afb83e7671558ae467a650bc9f.js",
     "service-worker.js": "/simple-redux-form/service-worker.js",
     "static/css/2.67e9f284.chunk.css.map": "/simple-redux-form/static/css/2.67e9f284.chunk.css.map",
-    "static/css/main.582ff947.chunk.css.map": "/simple-redux-form/static/css/main.582ff947.chunk.css.map",
+    "static/css/main.1a64f2d4.chunk.css.map": "/simple-redux-form/static/css/main.1a64f2d4.chunk.css.map",
     "static/media/react-widgets.css": "/simple-redux-form/static/media/rw-widgets.eceddf47.ttf"
   }
 }
