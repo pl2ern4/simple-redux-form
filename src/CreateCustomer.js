@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Field, Form, reduxForm } from 'redux-form';
 import {Redirect} from 'react-router-dom';
@@ -6,19 +6,22 @@ import {createNewUserAction} from './actions';
 
 const CreateCustomer = props => {
     const redirect = () => {
-        props.history.push(`/`);
+        return <Redirect to="/"/>
     }
+    const [value,setValue] = useState(0);
     if(props.toRedirect){
         return <Redirect to="/"/>
     }
     return (<Form name='newCustomer' onSubmit={props.handleSubmit(props.createNewCustomer)}>
                 <Field
-                name="name"
-                component="input"
-                type="text"
-                placeholder="Customer Name"
+                    name="name"
+                    component="input"
+                    type="text"
+                    placeholder="Customer Name"
+                    onChange={e=>setValue(e.target.value)}
+                    value={value}
                 />
-            <input type="Submit" value="Create Customer"/>
+            <button type="Submit">Create Customer</button>
             <button type="button" onClick={redirect}>Redirect To Customer Contact Page </button>
         </Form>)
 }

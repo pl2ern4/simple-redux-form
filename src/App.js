@@ -207,14 +207,14 @@ class App extends Component {
                       </button>
                       </td>
                     </tr>
-                    {customerContact[0] &&
+                    {(customerContact[0] &&
                       (<tr>
                       <td colSpan="3">
                         <button type="button" onClick={e=>deleteSelectedUser(customerContact[0]._id)}>
                           Delete Selected User
                         </button>
                         </td>
-                      </tr>)||null
+                      </tr>))||null
                     }
                   </tbody>
                 </table>
