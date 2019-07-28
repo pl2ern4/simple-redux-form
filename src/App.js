@@ -11,8 +11,9 @@ import './App.css';
 
 import {getCustomerAction, submitAction, deleteSelectedUserAction, handleErrorClick } from './actions';
 
-import {renderDropdownList} from './fieldComponent';
+import {required, isNumeric, minLength8, isDropDownValid} from './validation';
 
+import {renderDropdownList, renderField} from './fieldComponent';
 
 class App extends Component {
 
@@ -29,8 +30,9 @@ class App extends Component {
   }
 
   static getDerivedStateFromProps(props,state){
-    if(state.contactFields && state.contactFields.length>0 && props.customerContact.length===0){
-      window.location.reload();
+    
+    if(props.customerContact[0] && props.customerContact[0]._id){
+      props.change('customerList',props.customerContact[0]._id);
     }
     return {
       contactFields:props.customerContact[0] && props.customerContact[0].contactDetail,
@@ -44,13 +46,13 @@ class App extends Component {
   componentDidUpdate(prevProps, prevState){
     const initialValues = {};
     const {customerContact} = this.props;
-    const isNewPropsEqualToPrevProps = _.isEqual(customerContact,prevProps.customerContact);
+    // const {contactFields} = this.state;
+    // const isNewPropsEqualToPrevProps = _.isEqual(customerContact,prevProps.customerContact);
     
-    if((!isNewPropsEqualToPrevProps || (isNewPropsEqualToPrevProps && (prevProps.customerContact[0]
-    && !_.isEqual(this.state.contactFields, this.props.customerContact[0].contactDetail)))) && !this.state.isFieldUpdated){
+    if(!this.state.isFieldUpdated){
       
-      if(customerContact && customerContact[0]){
-          customerContact[0].contactDetail.forEach((obj,key)=>{
+      if(customerContact && customerContact[0] && customerContact[0].contactDetail){
+          customerContact[0].contactDetail.forEach((obj,key)=>{ console.log(obj,key);
             initialValues[`section_${key}.phone`]=obj.phone;
             initialValues[`section_${key}.isActive`]=obj.isActive;
           });
@@ -81,8 +83,22 @@ class App extends Component {
   }
   
   onDelete = (i,customerContact,fn)=>{
-      const newContactList = customerContact[0].contactDetail && customerContact[0].contactDetail.filter((obj,k)=>i!==k);
-      fn({key:'customerContact', contactDetail:newContactList,id:customerContact[0]._id})
+      let newContactList = [];
+
+      new Promise((resolve,reject)=>{
+        newContactList =customerContact[0].contactDetail && customerContact[0].contactDetail.filter((obj,k)=>i!==k);
+        resolve(newContactList);
+      })
+      .then((result)=>{
+        if(newContactList.length){
+          fn({action:'delete', key:'customerContact', contactDetail:newContactList,id:customerContact[0]._id})
+        }else{
+          const newContactField = customerContact;
+          newContactField[0].contactDetail=[];
+          this.setState({contactFields:newContactField})
+        }
+      });
+      
   }
 
   createUser = ()=>{
@@ -90,9 +106,9 @@ class App extends Component {
   }
 
   addContact = () =>{
-    const {contactFields}= this.state;
-    contactFields.push({'phone':'','isActive':0});
-    this.setState({contactFields,isFieldUpdated:false});
+    let updatedContactField= this.state.contactFields||[];
+    updatedContactField.push({'phone':'','isActive':0});
+    this.setState({contactFields:updatedContactField,isFieldUpdated:false});
   }
 
   getContactFields = params=>{ 
@@ -104,15 +120,17 @@ class App extends Component {
                 return (
                   <FormSection key={`field_${i}`} name={`section_${i}`}>
                     <tr key={`row_${i}`}>
-                      <td>
+                      <td className="table-column">
                           <Field
                             name="phone"
-                            component="input"
+                            component={renderField}
                             type="text"
                             placeholder="Phone number"
+                            maxlength={15}
+                            validate={[required, isNumeric, minLength8]}
                           />
                         </td>
-                      <td>    
+                      <td className="table-column">    
                         <Field
                           name={`isActive`}
                           component={renderDropdownList}
@@ -120,9 +138,10 @@ class App extends Component {
                           valueField='value'
                           textField='text'
                           defaultValue={obj.isActive}
+                          validate={[isDropDownValid]}
                       />
                       </td>  
-                      <td> <button type="button" onClick={e=>onDelete(i,customerContact,submitContact)}>Delete</button> </td>
+                      <td className="table-column"> <button type="button" onClick={e=>onDelete(i,customerContact,submitContact)}>Delete</button> </td>
                     </tr>
                   </FormSection>
                 )    
@@ -131,14 +150,14 @@ class App extends Component {
       return (<>
                 {html}
                 <tr>
-                  <td>
+                  <td colSpan="3">
                   <button type="button" onClick={addContact}>
                     Add Number
                   </button>
                   </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td colSpan="3">
                   <button type="submit" disabled={submitting}>
                     Update
                   </button>
@@ -180,7 +199,7 @@ class App extends Component {
             active={isFetching}
             spinner
             >
-            <Form onSubmit={handleSubmit(e=>this.handleSubmit(e,{customerContact,submitContact}))}>
+            <Form name="add-contact" onSubmit={handleSubmit(e=>this.handleSubmit(e,{customerContact,submitContact}))}>
                 
                 <table>
                   <tbody>

@@ -49,7 +49,7 @@ export const submitAction = payload =>{
         dispatch(loadFetching());
         services.submitForm({...payload})
         .then(result=>{
-            dispatch(loadResult({...result}));
+            dispatch(loadResult({...result }));
         })
         .catch(error=> dispatch(loadError(error)));
     }

@@ -1,4 +1,3 @@
-const headers = {"content-type":"application/json;charset=UTF-8"};
 const url = "https://simpleexpressapi.azurewebsites.net";
 
 const postHeader = new Headers({
@@ -8,7 +7,7 @@ const postHeader = new Headers({
 postHeader.append('Access-Control-Allow-Origin', url);
 postHeader.append('Access-Control-Allow-Credentials', 'true');
 
-async function getData(url,newHeaders=headers, payload={}, method='GET'){
+async function getData(url,newHeaders={}, payload={}, method='GET'){
     const body = {
         headers:{
             'Content-Type': 'application/json'

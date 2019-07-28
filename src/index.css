@@ -19,6 +19,10 @@ table{
   width:100%;
 }
 
+tr {
+  height: 4rem;
+}
+
 [name='newCustomer']{
   position: absolute;
   top: 30%;
@@ -34,22 +38,31 @@ table{
     border-radius: 0.5rem;
     height: 2.5rem;
 }
+[name='newCustomer'] input{
+  width: 92%;
+}
+
 
 input[type=text]{
   color: #000000;
+}
+input:focus, button:focus{
+  outline: 0;
 }
 
 input[type=text] ,input::placeholder {
   color: #666666;
   padding: 0.3rem;
   font-family: auto;
-  font-size:larger;
+  font-size:large;
 }
 
 button{
   background-color: #8ccdfb;
   border-color: #9999c5;
   font-family: auto;
+  border-radius: 0.5rem;
+  height: 2.5rem;
 }
 
 .heading{
@@ -69,4 +82,24 @@ button{
   font-weight: 600;
   font-family: auto;
   margin: 0.2rem 0 0 1rem;  
+}
+
+[name="add-contact"]{
+  margin: 0.2rem;
+}
+
+[name="add-contact"] button{
+  width: 100%;
+}
+[name="add-contact"] td.table-column {
+  width: 33%;  
+}
+
+input[type="text"] {
+  border-radius: 0.5rem;
+  border-width: 0.1rem;
+  padding: 0.5rem;
+}
+[name="add-contact"] input[type="text"] {
+  width: -webkit-fill-available;
 }
