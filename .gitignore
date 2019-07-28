@@ -1,5 +1,17 @@
 node_modules
 
+<<<<<<< HEAD
 build
+=======
+
+build
+
+package-lock.json
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+>>>>>>> master
 
 package-lock.json
