@@ -112,7 +112,7 @@ class App extends Component {
   }
 
   createUser = ()=>{
-    window.location.href = `/createnewcustomer`;
+    window.location.href = `${process.env.PUBLIC_URL}/createnewcustomer`;
   }
 
   addContact = () =>{
