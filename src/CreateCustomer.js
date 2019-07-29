@@ -10,7 +10,7 @@ const CreateCustomer = props => {
     
     const [toRedirect,setToBeRedirect] = useState(false);
     if(props.toRedirect || toRedirect){
-        return <Redirect to="/"/>
+        // return <Redirect to="/"/>
     } 
     return (<Form name='newCustomer' onSubmit={props.handleSubmit(props.createNewCustomer)}>
                 <p className="heading">Create New User</p>
