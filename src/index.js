@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Route, BrowserRouter as Router, HashRouter, Switch } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { rootReducer } from './rootReducer';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { createLogger } from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
-import { reducer as formReducer } from 'redux-form'
+import { reducer as formReducer } from 'redux-form';
 
 import App from './App';
 import CreateCustomer from './CreateCustomer';
@@ -23,7 +23,7 @@ const NotFound = () => <strong>Sorry No Page Found</strong>;
 const Routing = () => (
     <Router basename={process.env.PUBLIC_URL}>
         <Switch>
-            <Route exact path="/createnewcustomer" component={CreateCustomer} />
+            <Route path="/createnewcustomer" component={CreateCustomer} />
             <Route path="/" component={App} />
             <Route component={NotFound}/>
         </Switch>  
