@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { Field, FormSection, Form, reduxForm } from 'redux-form';
+import { Field, FormSection, Form, reduxForm, unregisterField } from 'redux-form';
 import _ from 'lodash';
 import LoadingOverlay from 'react-loading-overlay';
 import { confirmAlert } from 'react-confirm-alert';
+import { formValueSelector } from 'redux-form';
 
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import 'react-widgets/dist/css/react-widgets.css';
@@ -28,22 +29,24 @@ class App extends Component {
     }
   }
 
-  static getDerivedStateFromProps(props,state){
-
-    const selectedUser = (props.customerContact[0] && props.customerContact[0]._id) || "";
-    props.change('customerList',selectedUser);
-    return {
-      isFieldUpdated: (props.customerContact[0] && _.isEqual(props.customerContact[0].contactDetail,state.contactFields) && state.isFieldUpdated),
-      contactFields:(props.customerContact[0] && props.customerContact[0].contactDetail) || [],
-    }
-  }
-
   shouldComponentUpdate(nextProps, nextState){
-    if(!_.isEqual(nextState.contactFields,this.state.contactFields) && this.state.contactFields.length){
-        const contactFields = this.state.contactFields.filter((obj,key)=>!obj.phone);
-        this.setState({contactFields},()=>{
-          return true;
-        });
+
+    const selectedUser = (nextProps.customerContact[0] && nextProps.customerContact[0]._id) || "";
+    nextProps.change('customerList',selectedUser);
+
+    if(!_.isEqual(this.props.customerContact,nextProps.customerContact) || !_.isEqual(this.state.contactFields,nextState.contactFields)){
+
+        const isCurrentContactPropsEmpty = this.props.customerContact[0] && nextProps.customerContact[0] && (this.props.customerContact[0].contactDetail.length > nextProps.customerContact[0].contactDetail.length);
+
+        const isUserDeletedOneRow = nextProps.customerContact[0] && ((nextState.contactFields.length+1)===this.state.contactFields.length);
+        const isSameUser = nextProps.customerContact[0] && this.props.customerContact[0] && this.props.customerContact[0]._id == nextProps.customerContact[0]._id;
+        
+        const contactFields =  ((isUserDeletedOneRow || isCurrentContactPropsEmpty) && nextState.contactFields) || (nextProps.customerContact[0] && nextProps.customerContact[0].contactDetail) || [];
+        
+        this.setState({
+              isFieldUpdated: false,
+              contactFields: (isSameUser && contactFields) || (nextProps.customerContact[0] && nextProps.customerContact[0].contactDetail)
+            });
     }
     return true;
   }
@@ -54,18 +57,17 @@ class App extends Component {
 
   componentDidUpdate(prevProps, prevState){
     const initialValues = {};
-    const {customerContact} = this.props;
-    const isCustomerContactEmpty = customerContact && customerContact[0] && customerContact[0].contactDetail;
+    const { contactFields } = this.state;
 
-    if(!this.state.isFieldUpdated && isCustomerContactEmpty){
+    if(!this.state.isFieldUpdated && contactFields.length){
       
-        customerContact[0].contactDetail.forEach((obj,key)=>{
-            initialValues[`section_${key}.phone`]=obj.phone;
-            initialValues[`section_${key}.isActive`]=obj.isActive;
-        });
+      contactFields.forEach((obj,key)=>{
+            initialValues[`section_${key}.phone`]=obj.phone||"";
+            initialValues[`section_${key}.isActive`]=obj.isActive||0;
+      });
 
       if(Object.keys(initialValues).length){
-        Object.keys(initialValues).forEach(obj=>this.props.change(obj,initialValues[obj]));
+        Object.keys(initialValues).forEach(obj=>{this.props.change(obj,initialValues[obj]); this.props.untouch(obj)});
         this.setState({isFieldUpdated:true});
       }
 
@@ -83,31 +85,32 @@ class App extends Component {
   handleSubmit= (params,props) => { 
     let new_array = [];
     delete params.customerList;
-    Object.keys(params).forEach(obj=>{
-      if(_.isObject(params[obj])){
+    const {contactFormFields, customerContact } = props;
+    const newProps = _.pick(params,_.keys(contactFormFields));
+    Object.keys(newProps).forEach(obj=>{
+      if(_.isObject(params[obj]) && params[obj].phone){
         new_array.push({phone:params[obj].phone, isActive:params[obj].isActive.value||0})
       }
     });
-    props.submitContact({key:'customerContact', contactDetail:new_array,id:props.customerContact[0]._id})
+    props.submitContact({key:'customerContact', contactDetail:new_array,id: customerContact[0]._id})
   }
   
-  onDelete = (i,customerContact,fn)=>{
+  onDelete = (i,customerContact,fn,props)=>{
       let newContactList = [];
       let removedNumber = "";
+      const id = props.customerContact[0]._id;
       new Promise((resolve,reject)=>{
-        newContactList =customerContact[0].contactDetail && customerContact[0].contactDetail.filter((obj,k)=>i!==k && obj.phone!=="");
-        removedNumber = customerContact[0].contactDetail && customerContact[0].contactDetail.filter((obj,k)=>i===k);
+        newContactList = customerContact.filter((obj,k)=>i!==k);
+        removedNumber = customerContact.filter((obj,k)=>i===k);
         resolve({newContactList,removedNumber});
       })
       .then((result)=>{
-        if(!removedNumber[0].phone){
-          const newContactField = customerContact;
-          newContactField[0].contactDetail=newContactList;
-          this.setState({contactFields:newContactField})
-        }else{
-          fn({action:'delete', key:'customerContact', contactDetail:newContactList,id:customerContact[0]._id})
-        }
-      });
+        this.setState({contactFields:result.newContactList, isFieldUpdated:false},()=>{
+          if(removedNumber[0].phone){
+            fn({action:'delete', key:'customerContact', contactDetail:newContactList.filter((obj)=>obj.phone),id:id});
+          }
+        })
+    });
       
   }
 
@@ -124,7 +127,7 @@ class App extends Component {
   }
 
   getContactFields = params=>{ 
-      const {submitting, submitContact ,customerContact} = this.props;
+      const {submitting, submitContact } = this.props;
       const {onDelete,addContact} = this;
       const {contactFields} = this.state;
       const statusArray = [{value:0,text:'deactivate'},{value:1,text:'activate'}];
@@ -152,7 +155,11 @@ class App extends Component {
                           defaultValue={obj.isActive}
                       />
                       </td>  
-                      <td className="table-column"> <button type="button" onClick={e=>onDelete(i,customerContact,submitContact)}>Delete</button> </td>
+                      <td className="table-column"> 
+                        <button type="button" onClick={e=>onDelete(i,contactFields,submitContact,this.props)}>
+                          Delete
+                        </button>
+                      </td>
                     </tr>
                   </FormSection>
                 )    
@@ -190,6 +197,7 @@ class App extends Component {
       submitContact,
       error,
       isError,
+      contactFormFields,
       } = this.props;
 
       if(isError){
@@ -210,7 +218,7 @@ class App extends Component {
             active={isFetching}
             spinner
             >
-            <Form name="add-contact" onSubmit={handleSubmit(e=>this.handleSubmit(e,{customerContact,submitContact}))}>
+            <Form name="add-contact" onSubmit={handleSubmit(e=>this.handleSubmit(e,{customerContact, contactFormFields, submitContact}))}>
                 
                 <table>
                   <tbody>
@@ -253,7 +261,10 @@ class App extends Component {
   }
 }
 
-const ContactForm = reduxForm({form : 'ContactForm',enableReinitialize: true,})(App);
+const ContactForm = reduxForm({form : 'ContactForm',
+                                enableReinitialize: true,
+                                forceUnregisterOnUnmount: true,
+                              })(App);
 
 const mapStateToProps = state=>{
   return {
@@ -261,7 +272,8 @@ const mapStateToProps = state=>{
     isFetching : state.app.isFetching,
     customerContact : state.app.customerContact || [],
     error: state.app.error,
-    isError: state.app.isError
+    isError: state.app.isError,
+    contactFormFields:state.form.ContactForm && state.form.ContactForm.registeredFields||{}
   }
 }
 
