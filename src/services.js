@@ -43,11 +43,11 @@ export function getCustomerService(payload={}){
 }
 
 export function createNewUserService(payload={}){
-    return getData(`${url}/insert`,'',payload,'POST')
+    return getData(`${url}/insert`, postHeader, payload, 'POST')
             .then(result=>{ return {[payload.key]:result}});
 }
 
 export function deleteSelectedUserService(payload){
-    return getData(`${url}/delete`,postHeader,payload,'DELETE')
+    return getData(`${url}/delete`, postHeader, payload, 'DELETE')
             .then(result=>{ return {[payload.key]:result}});
 }
