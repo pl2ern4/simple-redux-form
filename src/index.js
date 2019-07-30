@@ -10,6 +10,7 @@ import { reducer as formReducer } from 'redux-form';
 
 import App from './App';
 import CreateCustomer from './CreateCustomer';
+import customMiddleware from './customMiddleware'; 
 
 import './index.css';
 
@@ -18,7 +19,7 @@ import * as serviceWorker from './serviceWorker';
 
 const appReducer =  combineReducers({app:rootReducer, form:formReducer}); 
 const loggerMiddleware = createLogger();
-const store = createStore(appReducer, applyMiddleware(thunkMiddleware,loggerMiddleware));
+const store = createStore(appReducer, applyMiddleware(thunkMiddleware, loggerMiddleware, customMiddleware));
 const NotFound = () => <strong>Sorry No Page Found</strong>;
 const Routing = () => (
     <HashRouter basename={process.env.PUBLIC_URL}>
