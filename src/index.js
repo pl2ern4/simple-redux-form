@@ -29,7 +29,7 @@ const Routing = () => (
             <Route component={NotFound}/>
         </Switch>  
     </HashRouter>
-)
+);
 
 const app = <Provider store={store}><Routing/></Provider>
 
